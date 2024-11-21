@@ -9,7 +9,7 @@ if ($id <= 0) {
 }
 
 // Use prepared statement to prevent SQL injection
-$sql = "DELETE FROM Student WHERE StudentID = ?";  
+$sql = "DELETE FROM Students WHERE student_id= ?";  
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
 

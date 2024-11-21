@@ -2,16 +2,15 @@
 include "student_db.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Get form data
-    $fname = $_POST['Fname'] ?? '';
-    $lname = $_POST['Lname'] ?? '';
-    $dateofbirth = $_POST['DateOfBirth'] ?? '';  
-    $email = $_POST['Email'] ?? '';
-    $address = $_POST['Adress'] ?? '';
+    $name = $_POST['name'] ?? '';
+    $address = $_POST['address'] ?? '';
+    $email = $_POST['email'] ?? '';  
+    $phone = $_POST['phone'] ?? '';  
+    $enrollment_year = (int)($_POST['enrollment_year'] ?? 0); 
+    $major = $_POST['major'] ?? '';
 
-    // Use the exact column names from your database
-    $sql = "INSERT INTO student (FName, LName, DateOfBirth, Email, Adress) 
-            VALUES (?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO students (name, address, email, phone, enrollment_year, major) 
+            VALUES (?, ?, ?, ?, ?, ?)";
             
     try {
         $stmt = $conn->prepare($sql);
@@ -19,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             throw new Exception("Prepare failed: " . $conn->error);
         }
         
-        $stmt->bind_param("sssss", $fname, $lname, $dateofbirth, $email, $address);
+        $stmt->bind_param("ssssis", $name, $address, $email, $phone, $enrollment_year, $major);
         
         if ($stmt->execute()) {
             header("Location: index.php");
@@ -42,24 +41,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <h1>Create New Student</h1>
     <form method="post">
         <p>
-            <label>First Name:</label>
-            <input type="text" name="Fname" required>
-        </p>
-        <p>
-            <label>Last Name:</label>
-            <input type="text" name="Lname" required>
-        </p>
-        <p>
-            <label>Date of Birth:</label>
-            <input type="date" name="DateOfBirth">  
-        </p>
-        <p>
-            <label>Email:</label>
-            <input type="email" name="Email">
+            <label>Name:</label>
+            <input type="text" name="name" required>
         </p>
         <p>
             <label>Address:</label>
-            <input type="text" name="Adress">
+            <input type="text" name="address" required>
+        </p>
+        <p>
+            <label>Email:</label>
+            <input type="email" name="email" required>
+        </p>
+        <p>
+            <label>Phone Number:</label>
+            <input type="text" name="phone" required>
+        </p>
+        <p>
+            <label>Enrollment Year:</label>
+            <input type="number" name="enrollment_year" required>
+        </p>
+        <p>
+            <label>Major:</label>
+            <input type="text" name="major" required>
         </p>
         <p>
             <input type="submit" value="Save">

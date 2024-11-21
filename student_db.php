@@ -3,7 +3,7 @@
 $servername = "localhost";
 $username = "root";
 $password = ""; 
-$dbname = "Students_recode_db";
+$dbname = "Student_Enrollment";
 
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
@@ -14,11 +14,8 @@ if ($conn->connect_error) {
 }
 
 else{
-	echo "Your student_rocord db Connected successfully";
+	echo "Your Student_Enrollment db Connected successfully";
 	echo "<br>";
-	
-
-
 
 }
 ?>
