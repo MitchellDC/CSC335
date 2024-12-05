@@ -15,7 +15,7 @@ $stmt->bind_param("i", $id);
 
 try {
     if ($stmt->execute()) {
-        header("Location: index.php");
+        header("Location: admin.php");
         exit();
     } else {
         throw new Exception("Error deleting record: " . $stmt->error);

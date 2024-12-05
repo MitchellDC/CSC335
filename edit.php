@@ -42,7 +42,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssssisi", $name, $address, $email, $phone, $enrollment_year, $major, $id);
     
     if ($stmt->execute()) {
-        header("Location: index.php");
+        header("Location: admin.php");
         exit();
     } else {
         echo "Error: " . $stmt->error;
@@ -58,34 +58,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <h1>Edit Student</h1>
     <form method="post">
-        <p>
+        <div>
             <label>Name:</label>
             <input type="text" name="name" value="<?= htmlspecialchars($student['name']) ?>" required>
-        </p>
-        <p>
+        </div>
+        <div>
             <label>Address:</label>
             <input type="text" name="address" value="<?= htmlspecialchars($student['address']) ?>" required>
-        </p>
-        <p>
+        </div>
+        <div>
             <label>Email:</label>
             <input type="email" name="email" value="<?= htmlspecialchars($student['email']) ?>" required>
-        </p>
-        <p>
+        </div>
+        <div>
             <label>Phone Number:</label>
             <input type="text" name="phone" value="<?= htmlspecialchars($student['phone']) ?>" required>
-        </p>
-        <p>
+        </div>
+        <div>
             <label>Enrollment Year:</label>
             <input type="number" name="enrollment_year" value="<?= htmlspecialchars($student['enrollment_year']) ?>" required>
-        </p>
-        <p>
+        </div>
+        <div>
             <label>Major:</label>
             <input type="text" name="major" value="<?= htmlspecialchars($student['major']) ?>" required>
-        </p>
-        <p>
+        </div>
+        <div>
             <input type="submit" value="Update Student">
-            <a href="index.php">Cancel</a>
-        </p>
+            <a href="admin.php">Cancel</a>
+        </div>
     </form>
 </body>
 </html>

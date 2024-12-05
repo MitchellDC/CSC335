@@ -5,24 +5,22 @@ $result = $conn->query("SELECT * FROM Students");
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Student List</title>  
+    <title>Admin Page</title>  
 </head>  
 <body>
-    <h1>Student List</h1>
+    <h1>Admin Page</h1>
     <a href="create_db.php">Add new Student</a>
     <table border="1">  
         <tr>
-            <th>student_id</th>
-            <th>name</th>
-            <th>address</th>
-            <th>email</th>
-            <th>phone</th>
-            <th>enrollment_year</th>
-            <th>major</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Enrollment_Year</th>
+            <th>Major</th>
         </tr>  
         <?php while($row = $result->fetch_assoc()): ?>
         <tr>
-            <td><?php echo $row['student_id']; ?></td>
             <td><?php echo $row['name']; ?></td>
             <td><?php echo $row['address']; ?></td>
             <td><?php echo $row['email']; ?></td>
@@ -36,6 +34,27 @@ $result = $conn->query("SELECT * FROM Students");
         </tr>  
         <?php endwhile; ?>
     </table>
+    <br>
+    <table border="2">  
+        <tr>
+            <th>Name</th>
+            <th>Department</th>
+            <th>Contact_info</th>
+        </tr>  
+        <?php while($row = $result->fetch_assoc()): ?>
+        <tr>
+            <td><?php echo $row['name']; ?></td>
+            <td><?php echo $row['department']; ?></td>
+            <td><?php echo $row['contact_info']; ?></td>
+            <td>
+                <a href="edit.php?id=<?php echo $row['instructor_id']; ?>">Edit</a>|
+                <a href="delete.php?id=<?php echo $row['instructor_id']; ?>" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
+            </td>
+        </tr>  
+        <?php endwhile; ?>
+    </table>
+
+
 </body>
 </html>
 <?php
