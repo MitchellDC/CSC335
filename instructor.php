@@ -15,7 +15,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             throw new Exception("Prepare failed: " . $conn->error);
         }
         
-        $stmt->bind_param("ssssis", $name, $department, $email);
+        $stmt->bind_param("sss", $name, $department, $email);
         
         if ($stmt->execute()) {
             header("Location: admin.php");
