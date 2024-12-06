@@ -2,12 +2,13 @@
 include "student_db.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'] ?? '';
+    $first_name = $_POST['first_name'] ?? '';
+    $last_name = $_POST['last_name'] ?? '';
     $department = $_POST['department'] ?? '';
-    $email = $_POST['contact_info'] ?? '';  
+    $contact_info = $_POST['contact_info'] ?? '';  
 
-    $sql = "INSERT INTO instructors (name, department, contact_info) 
-            VALUES (?, ?, ?)";
+    $sql = "INSERT INTO instructors (first_name, last_name, department, contact_info) 
+            VALUES (?, ?, ?, ?)";
             
     try {
         $stmt = $conn->prepare($sql);
@@ -15,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             throw new Exception("Prepare failed: " . $conn->error);
         }
         
-        $stmt->bind_param("sss", $name, $department, $email);
+        $stmt->bind_param("ssss", $first_name, $last_name, $department, $contact_info);
         
         if ($stmt->execute()) {
             header("Location: admin.php");
@@ -42,9 +43,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container mt-5">
         <h1>Create New Instructor</h1>
         <form method="post">
+        <div class="mb-3">
+                <label for="first_name" class="form-label">First Name:</label>
+                <input type="text" name="first_name" class="form-control" required>
+            </div>
             <div class="mb-3">
-                <label for="name" class="form-label">Name:</label>
-                <input type="text" name="name" class="form-control" required>
+                <label for="last_name" class="form-label">Last Name:</label>
+                <input type="text" name="last_name" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label for="department" class="form-label">Department:</label>
