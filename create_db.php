@@ -2,15 +2,16 @@
 include "student_db.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'] ?? '';
+    $first_name = $_POST['first_name'] ?? '';
+    $last_name = $_POST['last_name'] ?? '';
     $address = $_POST['address'] ?? '';
     $email = $_POST['email'] ?? '';  
     $phone = $_POST['phone'] ?? '';  
     $enrollment_year = (int)($_POST['enrollment_year'] ?? 0); 
     $major = $_POST['major'] ?? '';
 
-    $sql = "INSERT INTO students (name, address, email, phone, enrollment_year, major) 
-            VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO students (first_name, last_name, address, email, phone, enrollment_year, major) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
             
     try {
         $stmt = $conn->prepare($sql);
@@ -18,7 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             throw new Exception("Prepare failed: " . $conn->error);
         }
         
-        $stmt->bind_param("ssssis", $name, $address, $email, $phone, $enrollment_year, $major);
+        $stmt->bind_param("ssssiss", $first_name, $last_name, $address, $email, $phone, $enrollment_year, $major);
         
         if ($stmt->execute()) {
             header("Location: admin.php");
@@ -46,8 +47,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <h1>Create New Student</h1>
         <form method="post">
             <div class="mb-3">
-                <label for="name" class="form-label">Name:</label>
-                <input type="text" name="name" class="form-control" required>
+                <label for="first_name" class="form-label">First Name:</label>
+                <input type="text" name="first_name" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="last_name" class="form-label">Last Name:</label>
+                <input type="text" name="last_name" class="form-control" required>
             </div>
             <div class="mb-3">
                 <label for="address" class="form-label">Address:</label>

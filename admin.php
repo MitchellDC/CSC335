@@ -1,6 +1,8 @@
 <?php
 include 'student_db.php';
-$result = $conn->query("SELECT * FROM Students");
+$student_result = $conn->query("SELECT * FROM Students");
+$instructor_result = $conn->query("SELECT * FROM Instructors");
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,9 +21,9 @@ $result = $conn->query("SELECT * FROM Students");
             <th>Enrollment_Year</th>
             <th>Major</th>
         </tr>  
-        <?php while($row = $result->fetch_assoc()): ?>
+        <?php while($row = $student_result->fetch_assoc()): ?>
         <tr>
-            <td><?php echo $row['name']; ?></td>
+            <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
             <td><?php echo $row['address']; ?></td>
             <td><?php echo $row['email']; ?></td>
             <td><?php echo $row['phone']; ?></td>
@@ -35,15 +37,16 @@ $result = $conn->query("SELECT * FROM Students");
         <?php endwhile; ?>
     </table>
     <br>
-    <table border="2">  
+    <table border="1">  
+    <a href="instructor.php">Add new Instructor</a>
         <tr>
             <th>Name</th>
             <th>Department</th>
             <th>Contact_info</th>
         </tr>  
-        <?php while($row = $result->fetch_assoc()): ?>
+        <?php while($row = $instructor_result->fetch_assoc()): ?>
         <tr>
-            <td><?php echo $row['name']; ?></td>
+            <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
             <td><?php echo $row['department']; ?></td>
             <td><?php echo $row['contact_info']; ?></td>
             <td>
@@ -53,7 +56,6 @@ $result = $conn->query("SELECT * FROM Students");
         </tr>  
         <?php endwhile; ?>
     </table>
-
 
 </body>
 </html>
