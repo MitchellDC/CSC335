@@ -2,6 +2,7 @@
 include "student_db.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $course_id = $_POST['course_id'] ?? '';
     $title = $_POST['title'] ?? '';
     $description = $_POST['description'] ?? '';
     $credits = $_POST['credits'] ?? 0;
@@ -9,15 +10,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $instructor_id = $_POST['instructor_id'] ?? null;
     $max_enrollment = $_POST['max_enrollment'] ?? 0;
 
-    $sql = "INSERT INTO Courses (title, description, credits, schedule, instructor_id, max_enrollment) 
-            VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO Courses (course_id, title, description, credits, schedule, instructor_id, max_enrollment) 
+            VALUES (?, ?, ?, ?, ?, ?, ?)";
     
     try {
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssisii", $title, $description, $credits, $schedule, $instructor_id, $max_enrollment);
+        $stmt->bind_param("issisii",$course_id, $title, $description, $credits, $schedule, $instructor_id, $max_enrollment);
         
         if ($stmt->execute()) {
-            header("Location: course_list.php");
+            header("Location: admin.php");
             exit();
         } else {
             throw new Exception("Course creation failed: " . $stmt->error);
@@ -38,6 +39,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container mt-5">
     <h2>Create New Course</h2>
     <form method="post">
+        <div class="mb-3">
+            <label>Course ID</label>
+            <input type="text" name="course_id" class="form-control" required>
+        </div>
         <div class="mb-3">
             <label>Title</label>
             <input type="text" name="title" class="form-control" required>
