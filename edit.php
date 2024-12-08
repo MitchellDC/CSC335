@@ -18,6 +18,7 @@ if (!$student) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get form data
+    $student_id = $_POST['student_id'] ?? '';
     $first_name = $_POST['first_name'] ?? '';
     $last_name = $_POST['last_name'] ?? '';
     $address = $_POST['address'] ?? '';
@@ -27,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $major = $_POST['major'] ?? '';
 
     $sql = "UPDATE Students SET 
+            student_id = ?, 
             first_name = ?, 
             last_name = ?,
             address = ?,
@@ -41,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         die("Error preparing UPDATE statement: " . $conn->error);
     }
 
-    $stmt->bind_param("ssssissi", $first_name, $last_name, $address, $email, $phone, $enrollment_year, $major, $id);
+    $stmt->bind_param("issssissi", $student_id, $first_name, $last_name, $address, $email, $phone, $enrollment_year, $major, $id);
     
     if ($stmt->execute()) {
         header("Location: admin.php");
@@ -60,6 +62,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <h1>Edit Student</h1>
     <form method="post">
+        <div>
+            <label>Student ID:</label>
+            <input type="text" name="student_id" value="<?= htmlspecialchars($student['student_id']) ?>" required>
+        </div>
         <div>
             <label>First Name:</label>
             <input type="text" name="first_name" value="<?= htmlspecialchars($student['first_name']) ?>" required>

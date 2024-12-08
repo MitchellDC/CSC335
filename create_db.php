@@ -2,6 +2,7 @@
 include "student_db.php";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $student_id = $_POST['student_id'] ?? ''; 
     $first_name = $_POST['first_name'] ?? '';
     $last_name = $_POST['last_name'] ?? '';
     $address = $_POST['address'] ?? '';
@@ -10,8 +11,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $enrollment_year = (int)($_POST['enrollment_year'] ?? 0); 
     $major = $_POST['major'] ?? '';
 
-    $sql = "INSERT INTO students (first_name, last_name, address, email, phone, enrollment_year, major) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO students (student_id, first_name, last_name, address, email, phone, enrollment_year, major) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             
     try {
         $stmt = $conn->prepare($sql);
@@ -19,7 +20,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             throw new Exception("Prepare failed: " . $conn->error);
         }
         
-        $stmt->bind_param("ssssiss", $first_name, $last_name, $address, $email, $phone, $enrollment_year, $major);
+        $stmt->bind_param("issssiss", $student_id, $first_name, $last_name, $address, $email, $phone, $enrollment_year, $major);
         
         if ($stmt->execute()) {
             header("Location: admin.php");
@@ -46,6 +47,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="container mt-5">
         <h1>Create New Student</h1>
         <form method="post">
+            <div class="mb-3">
+                <label for="student_id" class="form-label">Student ID:</label>
+                <input type="text" name="student_id" class="form-control" required>
+            </div>
             <div class="mb-3">
                 <label for="first_name" class="form-label">First Name:</label>
                 <input type="text" name="first_name" class="form-control" required>
