@@ -4,27 +4,46 @@ include "student_db.php";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $course_id = $_POST['course_id'] ?? null;
     $day = $_POST['day'] ?? '';
-    $time = $_POST['time'] ?? '';
+    $start_time = $_POST['start_time'] ?? '';
+    $end_time = $_POST['end_time'] ?? '';
     $room_number = $_POST['room_number'] ?? '';
 
-    $sql = "INSERT INTO CourseSchedules (course_id, day, time, room_number) 
-            VALUES (?, ?, ?, ?)";
-    
-    try {
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("isss", $course_id, $day, $time, $room_number);
+    // Check for scheduling conflicts
+    $conflict_query = $conn->prepare("
+        SELECT * FROM CourseSchedules 
+        WHERE room_number = ? AND day = ? AND (
+            (start_time <= ? AND end_time > ?) OR
+            (start_time < ? AND end_time >= ?)
+        )
+    ");
+    $conflict_query->bind_param('ssssss', $room_number, $day, $start_time, $start_time, $end_time, $end_time);
+    $conflict_query->execute();
+    $conflict_result = $conflict_query->get_result();
+
+    if ($conflict_result->num_rows > 0) {
+        echo "<div class='alert alert-danger'>Schedule conflict: Another course is already scheduled in this room at the specified time.</div>";
+    } else {
+        // No conflicts, proceed with insertion
+        $sql = "INSERT INTO CourseSchedules (course_id, day, start_time, end_time, room_number) 
+                VALUES (?, ?, ?, ?, ?)";
         
-        if ($stmt->execute()) {
-            header("Location: course_schedules.php");
-            exit();
-        } else {
-            throw new Exception("Schedule entry failed: " . $stmt->error);
+        try {
+            $stmt = $conn->prepare($sql);
+            $stmt->bind_param("issss", $course_id, $day, $start_time, $end_time, $room_number);
+            
+            if ($stmt->execute()) {
+                header("Location: course_schedules.php");
+                exit();
+            } else {
+                throw new Exception("Schedule entry failed: " . $stmt->error);
+            }
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
         }
-    } catch (Exception $e) {
-        echo "Error: " . $e->getMessage();
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>
@@ -51,8 +70,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </select>
         </div>
         <div class="mb-3">
-            <label>Time</label>
-            <input type="time" name="time" class="form-control" required>
+            <label>Start Time</label>
+            <input type="time" name="start_time" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>End Time</label>
+            <input type="time" name="end_time" class="form-control" required>
         </div>
         <div class="mb-3">
             <label>Room Number</label>
