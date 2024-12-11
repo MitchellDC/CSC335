@@ -2,7 +2,7 @@
 include 'student_db.php';
 
 // Default semester filter
-$semester = isset($_GET['semester']) ? $_GET['semester'] : 'Spring 2025';
+
 $semester = isset($_GET['semester']) ? $_GET['semester'] : 'Fall 2025';
 
 // Fetch available semesters dynamically
