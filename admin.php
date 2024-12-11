@@ -18,10 +18,14 @@ $courses_results =$conn->query("    SELECT
         courseschedules.day, 
         courseschedules.start_time, 
         courseschedules.end_time, 
-        courseschedules.room_number
+        courseschedules.room_number,
+        GROUP_CONCAT(prerequisites.prerequisite_course_id SEPARATOR ', ') AS prerequisites
     FROM courses
     LEFT JOIN courseschedules 
-    ON courses.course_id = courseschedules.course_id");
+        ON courses.course_id = courseschedules.course_id
+    LEFT JOIN prerequisites
+        ON courses.course_id = prerequisites.course_id
+    GROUP BY courses.course_id");
 
 ?>
 <!DOCTYPE html>
@@ -135,6 +139,7 @@ $courses_results =$conn->query("    SELECT
                                 <th>Start Time</th>
                                 <th>End Time</th>
                                 <th>Room Number</th>
+                                <th>Prerequisites</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -151,6 +156,7 @@ $courses_results =$conn->query("    SELECT
                                 <td><?php echo $row['start_time']; ?></td>
                                 <td><?php echo $row['end_time']; ?></td>
                                 <td><?php echo $row['room_number']; ?></td>
+                                <td><?php echo $row['prerequisites'] ?: 'None'; ?></td>
                                 <td>
                                     <a href="courses_edits.php?id=<?php echo $row['course_id']; ?>" class="btn btn-warning btn-sm">Edit</a>
                                     <a href="courses_delete.php?id=<?php echo $row['course_id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete?')">Delete</a>
