@@ -27,6 +27,20 @@ $courses_results =$conn->query("    SELECT
         ON courses.course_id = prerequisites.course_id
     GROUP BY courses.course_id");
 
+$grade_results = $conn->query(
+    "SELECT 
+        Grades.enrollment_id, 
+        Grades.course_id, 
+        Grades.student_id, 
+        Grades.grade, 
+        Students.first_name, 
+        Students.last_name, 
+        Courses.title AS course_title
+    FROM Grades
+    JOIN Students ON Grades.student_id = Students.student_id
+    JOIN Courses ON Grades.course_id = Courses.course_id"
+);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -120,7 +134,41 @@ $courses_results =$conn->query("    SELECT
         </div>
 
         <div class="mb-3">
+            <a href="grade.php" class="btn btn-primary">Enter Grades</a>
+        </div>
+        <div class="card mb-4">
+            <div class="card-header bg-warning text-dark">Grades</div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered w-100">
+                        <thead>
+                            <tr>
+                                <th>Enrollment ID</th>
+                                <th>Course Title</th>
+                                <th>Student Name</th>
+                                <th>Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php while ($row = $grade_results->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?php echo $row['enrollment_id']; ?></td>
+                                    <td><?php echo $row['course_title']; ?></td>
+                                    <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
+                                    <td><?php echo $row['grade']; ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="mb-3">
             <a href="courses.php" class="btn btn-primary">Add New Course</a>
+            <a href="course_schedule.php" class="btn btn-primary">Add New Course Schedule</a>
+            <a href="prerequisites.php" class="btn btn-primary">Add Prerequisite</a>
         </div>
         <div class="card">
             <div class="card-header bg-info text-white">Courses</div>
