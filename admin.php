@@ -1,4 +1,10 @@
 <?php
+session_start();
+if (!isset($_SESSION['user'])) {
+    header('Location: login.php');
+    exit;
+}
+
 include 'student_db.php';
 $student_result = $conn->query("SELECT * FROM Students");
 $instructor_result = $conn->query("SELECT * FROM Instructors");
