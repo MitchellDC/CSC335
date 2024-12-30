@@ -10,7 +10,7 @@ if (!isset($_SESSION['student'])) {
 
 // Get student ID from the email
 $student_email = $_SESSION['student'];
-$student_query = $conn->prepare("SELECT id FROM students_login WHERE email = ?");
+$student_query = $conn->prepare("SELECT id FROM student_login WHERE email = ?");
 $student_query->bind_param("s", $student_email);
 $student_query->execute();
 $student_result = $student_query->get_result();
@@ -19,7 +19,7 @@ $student_id = $student_data['id'];
 
 // Get selected courses from session
 if (!isset($_SESSION['selected_courses']) || empty($_SESSION['selected_courses'])) {
-    header('Location: student.php');
+    header('Location: review_courses.php');
     exit;
 }
 

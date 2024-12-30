@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $password = password_hash($_POST['register_password'], PASSWORD_DEFAULT); // Hash password securely
 
         try {
-            $stmt = $conn->prepare("INSERT INTO students_login (email, password) VALUES (?, ?)");
+            $stmt = $conn->prepare("INSERT INTO student_login (email, password) VALUES (?, ?)");
             $stmt->bind_param("ss", $email, $password);
             $stmt->execute();
 
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = $_POST['login_email'];
         $password = $_POST['login_password'];
 
-        $stmt = $conn->prepare("SELECT password FROM students_login WHERE email = ?");
+        $stmt = $conn->prepare("SELECT password FROM student_login WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -39,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($row = $result->fetch_assoc()) {
             if (password_verify($password, $row['password'])) {
                 $_SESSION['student'] = $email;
-                header("Location: student.php");
+                header("Location: review_courses.php");
                 exit;
             } else {
                 $error = 'Invalid password.';

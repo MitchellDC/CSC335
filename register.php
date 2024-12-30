@@ -12,14 +12,25 @@ if (isset($_POST['register'])) {
     $password = $_POST['register_password'];
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = mysqli_prepare($conn, "INSERT INTO login (email, password_hash) VALUES (?, ?)");
-    mysqli_stmt_bind_param($stmt, "ss", $email, $hashedPassword);
+    $stmt = mysqli_prepare($conn, "SELECT COUNT(*) FROM login WHERE email = ?");
+    mysqli_stmt_bind_param($stmt, "s", $email);
     mysqli_stmt_execute($stmt);
-    header('Location: login.php');
-        exit; 
+    mysqli_stmt_bind_result($stmt, $emailCount);
+    mysqli_stmt_fetch($stmt);
     mysqli_stmt_close($stmt);
-}
 
+    if ($emailCount > 0) {
+        $error = "This email is already registered.";
+    } else {
+        $stmt = mysqli_prepare($conn, "INSERT INTO login (email, password_hash) VALUES (?, ?)");
+        mysqli_stmt_bind_param($stmt, "ss", $email, $hashedPassword);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+        
+        header('Location: login.php');
+        exit;
+    }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,7 +44,6 @@ if (isset($_POST['register'])) {
     <?php if (isset($error)): ?>
         <p style="color: red;"><?= $error ?></p>
     <?php endif; ?>
-
 
     <div class="d-flex justify-content-center align-items-center" style="height: 100vh;">
         <div class="card p-5 w-50 shadow">
@@ -56,8 +66,5 @@ if (isset($_POST['register'])) {
             </div>
         </div>
     </div>
-
-
-
 </body>
 </html>
