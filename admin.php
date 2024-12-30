@@ -156,7 +156,11 @@ $grade_results = $conn->query(
                                     <td><?php echo $row['course_title']; ?></td>
                                     <td><?php echo $row['first_name'] . ' ' . $row['last_name']; ?></td>
                                     <td><?php echo $row['grade']; ?></td>
+                                    <td>
+                                        <a href="edit_grade.php?id=<?php echo $row['enrollment_id']; ?>" class="btn btn-warning btn-sm">Edit</a>
+                                    </td>
                                 </tr>
+
                             <?php endwhile; ?>
                         </tbody>
                     </table>
